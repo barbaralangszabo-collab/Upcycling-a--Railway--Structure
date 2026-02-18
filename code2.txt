@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIM for Bridges — Upcycling (May 2025)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F3F7FA;
+  --surface:#FFFFFF;
+  --panel:#EEF4F8;
+  --line:#D8E3EC;
+
+  --ink:#0F1E2A;
+  --muted:#506578;
+  --muted2:#6B8192;
+
+  --navy:#0B1A23;
+
+  --blue:#1F6FB2;
+  --blue-soft:rgba(31,111,178,.12);
+
+  --red:#C83A2D;
+  --red2:#E04A3C;
+  --red-soft:rgba(200,58,45,.14);
+
+  --radius:18px;
+  --radius2:22px;
+  --shadow:0 12px 34px rgba(15,30,42,.08);
+  --btnShadow:0 10px 22px rgba(15,30,42,.10);
+
+  --good:rgba(16,185,129,.14);
+  --bad:rgba(239,68,68,.14);
+}
+
+*{box-sizing:border-box}
+html,body{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:
+    radial-gradient(1100px 600px at 12% 0%, rgba(31,111,178,.10), transparent 55%),
+    radial-gradient(900px 500px at 88% 10%, rgba(200,58,45,.14), transparent 58%),
+    var(--bg);
+  color:var(--ink);
+  font-size:clamp(20px,1.7vw,24px);
+  line-height:1.9;
+}
+
+/* HERO */
+.hero{ padding:22px 18px 0; }
+.hero .hero-frame{
+  max-width:880px;
+  margin:0 auto;
+  border-radius:var(--radius2);
+  overflow:hidden;
+  border:1px solid rgba(216,227,236,.9);
+  box-shadow:var(--shadow);
+  background:var(--navy);
+}
+.hero img{ width:100%; height:auto; display:block; }
+
+/* WRAP */
+.wrap{ max-width:1120px; margin:auto; padding:24px; }
+
+/* TITLE */
+.title{
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  border-radius:var(--radius2);
+  padding:18px 22px;
+  box-shadow:var(--shadow);
+  margin-top:16px;
+}
+.title h1{
+  margin:0;
+  font-size:1.9rem;
+  font-weight:900;
+  line-height:1.12;
+  letter-spacing:-.02em;
+}
+.subtitle{
+  margin-top:8px;
+  color:var(--muted);
+  font-weight:700;
+  max-width:80ch;
+}
+
+/* NAV */
+.nav{
+  margin-top:16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.nav-btn{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.96);
+  border-radius:999px;
+  padding:14px 20px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.15s;
+  color:var(--ink);
+  font-size:1.12rem;
+  box-shadow:0 6px 16px rgba(15,30,42,.06);
+}
+.nav-btn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(200,58,45,.45);
+  color:var(--red);
+}
+.nav-btn.active{
+  background:linear-gradient(135deg, var(--red), var(--red2));
+  color:white;
+  border-color:rgba(200,58,45,.30);
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,.97);
+  border:1px solid var(--line);
+  border-radius:var(--radius2);
+  padding:38px;
+  margin-top:16px;
+  box-shadow:var(--shadow);
+}
+
+/* Headings */
+.kicker{
+  font-size:1.02rem;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--muted2);
+  margin:0 0 12px 0;
+  font-weight:900;
+}
+.topic-title{
+  font-size:1.7rem;
+  font-weight:900;
+  margin:0 0 8px 0;
+  letter-spacing:-.01em;
+}
+.topic-sub{
+  margin:0 0 18px 0;
+  color:var(--muted);
+  font-weight:750;
+}
+
+/* Sections */
+.section{display:none}
+.section.active{display:block}
+
+/* Keyword chip */
+.kw{
+  display:inline-flex;
+  align-items:center;
+  font-weight:900;
+  padding:.14em .55em;
+  border-radius:999px;
+  border:1px solid rgba(200,58,45,.22);
+  background:var(--red-soft);
+  color:#8B231B;
+  white-space:nowrap;
+}
+
+/* Notes */
+.note{
+  background:linear-gradient(180deg, rgba(200,58,45,.12), rgba(200,58,45,.07));
+  border:1px solid rgba(200,58,45,.18);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:14px 0 18px 0;
+  color:#2a3b49;
+  font-weight:750;
+}
+
+/* Blocks */
+.grid2{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+@media (min-width: 860px){
+  .grid2{grid-template-columns:1fr 1fr}
+}
+.block{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px 18px;
+  background:#fff;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.45em;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:.98rem;
+  border:1px solid var(--line);
+  margin-bottom:10px;
+}
+.badge.blue{background:var(--blue-soft); border-color:rgba(31,111,178,.22); color:#0F4E86;}
+.badge.red{background:var(--red-soft); border-color:rgba(200,58,45,.22); color:#8B231B;}
+
+/* FLASHCARD */
+.flash-wrap{perspective:1000px;cursor:pointer}
+.flash-card{
+  position:relative;
+  min-height:320px;
+  transform-style:preserve-3d;
+  transition:.45s;
+}
+.flash-wrap.flipped .flash-card{transform:rotateY(180deg)}
+.flash-face{
+  position:absolute;
+  inset:0;
+  padding:34px;
+  border-radius:var(--radius2);
+  background:
+    radial-gradient(700px 360px at 14% 8%, rgba(200,58,45,.18), transparent 55%),
+    radial-gradient(780px 420px at 90% 5%, rgba(31,111,178,.14), transparent 55%),
+    var(--panel);
+  border:1px solid var(--line);
+  backface-visibility:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  box-shadow:0 12px 30px rgba(15,30,42,.08);
+}
+.flash-front{
+  font-size:2.05rem;
+  font-weight:900;
+  line-height:1.25;
+}
+.flash-back{transform:rotateY(180deg)}
+.flash-back .def{font-weight:900; margin-bottom:10px}
+.flash-back .ex{
+  border-left:4px solid var(--red);
+  padding-left:14px;
+  font-style:italic;
+  color:#2a3b49;
+}
+
+/* Buttons */
+.controls{
+  margin-top:16px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#fff;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:var(--btnShadow);
+  transition:.15s;
+}
+.btn:hover{transform:translateY(-1px); border-color:rgba(200,58,45,.28)}
+.btn.primary{
+  background:linear-gradient(135deg, var(--red), var(--red2));
+  color:white;
+  border-color:rgba(200,58,45,.35);
+}
+.btn.secondary{
+  background:linear-gradient(135deg, rgba(31,111,178,.14), rgba(31,111,178,.08));
+  border-color:rgba(31,111,178,.22);
+  color:#0F4E86;
+}
+.btn.ghost{
+  background:transparent;
+  border-color:rgba(200,58,45,.28);
+  color:var(--red);
+  box-shadow:none;
+}
+.btn.ghost:hover{
+  background:rgba(200,58,45,.06);
+}
+
+/* Options */
+.opt{
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  margin-bottom:10px;
+  cursor:pointer;
+  font-weight:850;
+  background:#fff;
+  transition:.12s;
+}
+.opt:hover{
+  border-color:rgba(200,58,45,.30);
+  background:rgba(200,58,45,.06);
+}
+.opt.selected{
+  background:rgba(31,111,178,.10);
+  border-color:rgba(31,111,178,.28);
+}
+
+/* Feedback (reserve space to avoid layout jump) */
+.feedback{
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:14px;
+  font-weight:900;
+  border:1px solid var(--line);
+  min-height:58px;      /* keeps card height steady */
+  display:block;
+  visibility:hidden;    /* reserve space but hide until used */
+}
+.feedback.good{background:var(--good); border-color:rgba(16,185,129,.25)}
+.feedback.bad{background:var(--bad); border-color:rgba(239,68,68,.25)}
+.feedback.show{visibility:visible;}
+
+.small{
+  font-size:1.0rem;
+  color:var(--muted);
+  font-weight:750;
+}
+
+/* Problem-solving tasks */
+.task{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px 18px;
+  background:#fff;
+  margin-bottom:14px;
+}
+.task h3{
+  margin:0 0 10px 0;
+  font-size:1.18rem;
+  letter-spacing:-.01em;
+}
+.task .meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:10px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:.5em;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  font-weight:900;
+  font-size:.96rem;
+}
+.pill.red{background:var(--red-soft); border-color:rgba(200,58,45,.22); color:#8B231B;}
+.pill.blue{background:var(--blue-soft); border-color:rgba(31,111,178,.22); color:#0F4E86;}
+.task .prompt{color:#2a3b49; font-weight:750; margin:0 0 10px 0;}
+details{
+  margin-top:10px;
+  border:1px solid rgba(31,111,178,.18);
+  background:rgba(31,111,178,.06);
+  border-radius:14px;
+  padding:10px 12px;
+}
+details summary{
+  cursor:pointer;
+  font-weight:900;
+  color:#0F4E86;
+}
+details .key{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(31,111,178,.18);
+  color:#203242;
+  font-weight:750;
+}
+
+p{margin:0 0 14px 0}
+ul,ol{margin:0; padding-left:22px}
+li{margin:10px 0}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <div class="hero-frame">
+    <img src="12.png" alt="Bridge hero image">
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="title">
+    <h1>Bridge BIM — Upcycling a Railway Structure</h1>
+    <div class="subtitle">
+      Architect learning page (May 2025): reuse logic, as-is modelling, constructability, and core vocabulary.
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" data-pane="article">Article</button>
+    <button class="nav-btn" data-pane="summary">Key Concepts</button>
+    <button class="nav-btn" data-pane="vocab">Flashcards</button>
+    <button class="nav-btn" data-pane="vocabtest">Vocab Test (20)</button>
+    <button class="nav-btn" data-pane="practice">Problem Solving (4)</button>
+    <button class="nav-btn" data-pane="test">Final Test (20)</button>
+  </div>
+
+  <main class="card">
+
+    <!-- ARTICLE -->
+    <section id="pane-article" class="section active">
+      <div class="kicker">Article</div>
+      <div class="topic-title">Upcycling an Obsolete Railway Bridge</div>
+      <div class="topic-sub">How BIM supports reuse decisions and reduces retrofit uncertainty.</div>
+
+      <div class="note">
+        Focus: <span class="kw">upcycling</span>, <span class="kw">as-is modelling</span>, and <span class="kw">constructability</span>.
+      </div>
+
+      <p>
+        The article presents a sustainable strategy for an obsolete railway bridge: rather than demolish the structure, the team identifies
+        components with <span class="kw">residual load-bearing capacity</span> and repurposes them into new public infrastructure.
+        The architectural value is not only the object’s form, but the ability to create new pedestrian/cycle connectivity with an already-built span.
+      </p>
+
+      <p>
+        Retrofit projects are dominated by uncertainty. A key move is building an <span class="kw">as-is model</span> from <span class="kw">reality capture</span>
+        (often a <span class="kw">point cloud</span>) so decisions reflect the real geometry and constraints—not idealized drawings.
+        This supports coordination, interface detailing, and reliable quantities.
+      </p>
+
+      <p>
+        BIM supports construction planning through <span class="kw">constructability</span> review (access, staging, lifting, temporary works)
+        and coordination through <span class="kw">clash detection</span>. Reuse strengthens the sustainability case by lowering waste and
+        <span class="kw">embodied carbon</span>, aligning with <span class="kw">circular economy</span> thinking.
+      </p>
+    </section>
+
+    <!-- KEY CONCEPTS -->
+    <section id="pane-summary" class="section">
+      <div class="kicker">Key Concepts</div>
+      <div class="topic-title">What Architects Should Take From This</div>
+      <div class="topic-sub">Concepts that matter in real coordination and retrofit delivery.</div>
+
+      <div class="grid2">
+        <div class="block">
+          <div class="badge red">Reuse logic</div>
+          <ul>
+            <li><span class="kw">Upcycling</span>: reuse components for higher value than scrap.</li>
+            <li><span class="kw">Residual capacity</span>: prove what the structure can still do safely.</li>
+            <li><span class="kw">Embodied carbon</span>: avoid new material emissions by reuse.</li>
+            <li><span class="kw">Circular economy</span>: keep structural components in long-term use.</li>
+          </ul>
+        </div>
+        <div class="block">
+          <div class="badge blue">Delivery logic</div>
+          <ul>
+            <li><span class="kw">As-is model</span>: represent reality, including deviations.</li>
+            <li><span class="kw">Reality capture</span> / <span class="kw">Point cloud</span>: reliable geometric baseline.</li>
+            <li><span class="kw">Tolerance management</span>: design for imperfect fit.</li>
+            <li><span class="kw">Constructability</span>: staging, access, lifting, temporary works.</li>
+            <li><span class="kw">Clash detection</span>: find spatial conflicts before site.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section id="pane-vocab" class="section">
+      <div class="kicker">Flashcards</div>
+      <div class="topic-title">Click to Flip</div>
+      <div class="topic-sub">Term → definition + example.</div>
+
+      <div class="flash-wrap" id="flashWrap">
+        <div class="flash-card">
+          <div class="flash-face flash-front" id="cardFront"></div>
+          <div class="flash-face flash-back">
+            <div class="def" id="cardDef"></div>
+            <div class="ex" id="cardEx"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn secondary" onclick="prevCard()">◀ Previous</button>
+        <button class="btn primary" onclick="nextCard()">Next ▶</button>
+      </div>
+
+      <p class="small" style="margin-top:12px;">Tip: define the term, then say one project example.</p>
+    </section>
+
+    <!-- VOCAB TEST -->
+    <section id="pane-vocabtest" class="section">
+      <div class="kicker">Vocabulary Test</div>
+      <div class="topic-title">Gap Filling (20)</div>
+      <div class="topic-sub">Choose the best term to complete the sentence.</div>
+
+      <div id="vocabQuestion"></div>
+      <div id="vocabOptions" style="margin-top:14px;"></div>
+      <div id="vocabFeedback" class="feedback"></div>
+
+      <div class="controls">
+        <button class="btn secondary" onclick="prevVocab()">◀ Previous</button>
+        <button class="btn primary" onclick="nextVocab()">Next ▶</button>
+        <button class="btn ghost" onclick="resetVocabTest()">↺ Reset</button>
+      </div>
+    </section>
+
+    <!-- PROBLEM SOLVING -->
+    <section id="pane-practice" class="section">
+      <div class="kicker">Problem Solving</div>
+      <div class="topic-title">4 Real-Life Scenarios for Architects</div>
+      <div class="topic-sub">Discuss in class, then reveal the key.</div>
+
+      <div class="task">
+        <h3>Task 1 — Reuse Feasibility Pitch</h3>
+        <div class="meta">
+          <span class="pill red">Client meeting</span>
+          <span class="pill blue">Concept stage</span>
+        </div>
+        <p class="prompt">
+          The city wants a quick new pedestrian crossing. You have access to a dismantled railway truss segment.
+          Draft a 6-point “reuse pitch” for the client: what you propose, what you need to verify, and what risks you manage.
+        </p>
+        <details>
+          <summary>Reveal key</summary>
+          <div class="key">
+            <ul>
+              <li>Define the concept: <span class="kw">upcycling</span> + intended new use (ped/cycle).</li>
+              <li>Request evidence: inspections + analysis for <span class="kw">residual capacity</span> and <span class="kw">fatigue</span>.</li>
+              <li>Verify geometry using <span class="kw">reality capture</span> → <span class="kw">as-is model</span>.</li>
+              <li>Identify constraints: <span class="kw">clearance envelope</span>, access/maintenance, regulations.</li>
+              <li>Plan delivery: <span class="kw">constructability</span> (access, lifting, temporary works, staging).</li>
+              <li>Make sustainability legible: waste avoided + <span class="kw">embodied carbon</span> benefits.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="task">
+        <h3>Task 2 — As-Is Modelling Strategy</h3>
+        <div class="meta">
+          <span class="pill red">BIM execution</span>
+          <span class="pill blue">Coordination</span>
+        </div>
+        <p class="prompt">
+          The existing records are incomplete. Propose a modelling workflow for the first 2 weeks:
+          what you scan, what you model, and how you represent uncertainty/tolerances so contractors can build.
+        </p>
+        <details>
+          <summary>Reveal key</summary>
+          <div class="key">
+            <ul>
+              <li>Week 1: collect <span class="kw">point cloud</span> + targeted survey on critical nodes/connections.</li>
+              <li>Build an <span class="kw">as-is model</span> focusing on interfaces, not “everything.”</li>
+              <li>Add <span class="kw">tolerance management</span> zones at old↔new interfaces.</li>
+              <li>Tag uncertainties (concealed areas, unknown plates/bolts, corrosion) as model issues.</li>
+              <li>Run early <span class="kw">clash detection</span> with deck/rail/lighting zones.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="task">
+        <h3>Task 3 — Constructability + Staging Plan</h3>
+        <div class="meta">
+          <span class="pill red">Construction planning</span>
+          <span class="pill blue">Safety</span>
+        </div>
+        <p class="prompt">
+          Site access is tight, the city requires minimal disruption, and lifts must happen during short windows.
+          Outline a staging plan (steps) and list the minimum BIM views/deliverables you’d hand to the contractor.
+        </p>
+        <details>
+          <summary>Reveal key</summary>
+          <div class="key">
+            <ul>
+              <li>Define lift windows + access routes + laydown area.</li>
+              <li>Model <span class="kw">temporary works</span> zones (supports, lifting frames, exclusion zones).</li>
+              <li>Sequence: foundations → supports → lift → lock-in → deck + safety systems.</li>
+              <li>Deliverables: stage views, lift diagrams, clearance checks, interface details, clash report.</li>
+              <li>Confirm <span class="kw">clearance envelope</span> at each stage, not only final state.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="task">
+        <h3>Task 4 — Sustainability Argument That Holds Up</h3>
+        <div class="meta">
+          <span class="pill red">Stakeholders</span>
+          <span class="pill blue">Sustainability</span>
+        </div>
+        <p class="prompt">
+          A stakeholder says: “Reuse is marketing.” Build a structured argument (5 bullets) showing what you measure,
+          what you compare against, and what trade-offs you acknowledge.
+        </p>
+        <details>
+          <summary>Reveal key</summary>
+          <div class="key">
+            <ul>
+              <li>Compare reuse vs new build: materials, time, disruption, cost ranges.</li>
+              <li>Quantify <span class="kw">embodied carbon</span>: new steel vs reused steel + refurbishment impacts.</li>
+              <li>Acknowledge trade-offs: coatings, repairs, transport, compliance upgrades.</li>
+              <li>Connect to <span class="kw">circular economy</span>: component life extension, waste reduction.</li>
+              <li>Explain co-benefits: faster delivery + urban connectivity + heritage value.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- FINAL TEST -->
+    <section id="pane-test" class="section">
+      <div class="kicker">Final Test</div>
+      <div class="topic-title">Multiple Choice (20)</div>
+      <div class="topic-sub">End-of-class knowledge check.</div>
+
+      <div id="testQuestion"></div>
+      <div id="testOptions" style="margin-top:14px;"></div>
+      <div id="testFeedback" class="feedback"></div>
+
+      <div class="controls">
+        <button class="btn secondary" onclick="prevTest()">◀ Previous</button>
+        <button class="btn primary" onclick="nextTest()">Next ▶</button>
+        <button class="btn ghost" onclick="resetFinalTest()">↺ Reset</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* NAV (no scrollTo to avoid jumping) */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('pane-'+btn.dataset.pane).classList.add('active');
+  });
+});
+
+/* FLASHCARDS — 20 */
+const cards=[
+  {term:"Upcycling",def:"Reuse an existing structure/component for a higher-value new function (beyond recycling).",ex:"A truss segment is repurposed as a new urban foot/cycle crossing."},
+  {term:"Adaptive reuse",def:"Repurpose an existing asset while keeping substantial parts.",ex:"Rail infrastructure becomes public mobility infrastructure."},
+  {term:"Residual capacity",def:"Remaining structural capacity after considering damage, fatigue, and deterioration.",ex:"A truss may still carry footbridge loads even if rail demands are too high."},
+  {term:"Steel truss",def:"Triangulated steel system transferring loads primarily through axial forces.",ex:"Truss geometry enables long spans with low self-weight."},
+  {term:"Superstructure",def:"Bridge elements above bearings: deck, truss/girders, crossbeams, bracing.",ex:"Superstructure choices define load paths and interfaces."},
+  {term:"Stringer beams",def:"Longitudinal deck-support members; often fatigue-sensitive in rail bridges.",ex:"High-cycle rail loading increases fatigue risk in stringers."},
+  {term:"Fatigue",def:"Progressive damage/cracking from repeated stress cycles over time.",ex:"Millions of cycles can initiate and grow cracks."},
+  {term:"Dismantling",def:"Controlled deconstruction method to remove components safely and preserve them.",ex:"Lift points and cuts are coordinated to keep reuse possible."},
+  {term:"Reality capture",def:"Capturing real geometry via scanning/photogrammetry/survey.",ex:"Reality capture reveals deviations vs legacy drawings."},
+  {term:"Point cloud",def:"3D dataset from scanning used to build/verify existing conditions.",ex:"Point clouds show true member positions and distortions."},
+  {term:"As-is model",def:"Digital model representing current real condition, including deviations.",ex:"The as-is model becomes the coordination baseline."},
+  {term:"Tolerance management",def:"Designing around dimensional uncertainty and fit-up allowances.",ex:"Allowances are built into connections between old and new parts."},
+  {term:"Defect mapping",def:"Locating/tagging corrosion, cracks, deformation as model-linked data.",ex:"Defect tags guide strengthening and inspection priorities."},
+  {term:"Clearance envelope",def:"Volume that must remain free for safe movement/operation.",ex:"Defines safe pedestrian/cyclist passage without conflicts."},
+  {term:"Interface",def:"Connection/transition zone between old and new systems.",ex:"Old steel-to-new deck interface drives detailing and tolerance."},
+  {term:"Constructability",def:"Feasibility and safety of construction under real constraints.",ex:"Access, staging, lifting, and temporary works define buildability."},
+  {term:"Temporary works",def:"Provisional supports/staging needed during construction.",ex:"Temporary supports stabilize components during lifting/installation."},
+  {term:"Clash detection",def:"Digital identification of spatial conflicts among components.",ex:"Guardrail posts clashing with existing bracing are fixed early."},
+  {term:"Embodied carbon",def:"CO₂ emissions tied to materials + fabrication + transport + construction.",ex:"Reusing steel avoids emissions from new production."},
+  {term:"Circular economy",def:"Extending component/material life through reuse and recovery.",ex:"Bridge elements remain in circulation instead of becoming waste."},
+];
+let cardIndex=0;
+const flashWrap=document.getElementById('flashWrap');
+const cardFront=document.getElementById('cardFront');
+const cardDef=document.getElementById('cardDef');
+const cardEx=document.getElementById('cardEx');
+function renderCard(){
+  const c=cards[cardIndex];
+  cardFront.textContent=c.term;
+  cardDef.textContent=c.def;
+  cardEx.textContent=c.ex;
+  flashWrap.classList.remove('flipped');
+}
+function nextCard(){cardIndex=(cardIndex+1)%cards.length;renderCard();}
+function prevCard(){cardIndex=(cardIndex-1+cards.length)%cards.length;renderCard();}
+flashWrap.addEventListener('click',()=>flashWrap.classList.toggle('flipped'));
+renderCard();
+
+/* VOCAB TEST — 20 gap-fill */
+const vocabTest=[
+  {s:"Choosing ________ instead of demolition can retain structural value and reduce waste.", opts:["upcycling","clash detection","superstructure"], a:0, why:"Upcycling is reuse for higher value than scrap."},
+  {s:"An ________ model represents the real existing condition including deviations.", opts:["as-is","as-designed","marketing"], a:0, why:"As-is models reflect site reality."},
+  {s:"Laser scanning often produces a ________ used to build accurate geometry.", opts:["point cloud","bill of quantities","mood board"], a:0, why:"Point clouds are scan-based 3D datasets."},
+  {s:"________ is the remaining safe performance of an existing structure after deterioration.", opts:["Residual capacity","Aesthetics","Acoustics"], a:0, why:"Residual capacity evaluates what it can still safely do."},
+  {s:"________ mapping records corrosion, cracks, or deformation as trackable information.", opts:["Defect","Color","Brand"], a:0, why:"Defect mapping documents and tracks damage."},
+  {s:"Designing for imperfect fit between old and new is ________ management.", opts:["tolerance","stress","brand"], a:0, why:"Tolerance management addresses dimensional uncertainty."},
+  {s:"A ________ envelope defines space that must remain free for safe movement.", opts:["clearance","weather","sound"], a:0, why:"Clearance envelopes protect required free space."},
+  {s:"________ detection finds spatial conflicts between components before construction.", opts:["Clash","Noise","Light"], a:0, why:"Clash detection identifies geometry conflicts early."},
+  {s:"________ works are provisional supports used during construction stages.", opts:["Temporary","Permanent","Decorative"], a:0, why:"Temporary works are not part of the final permanent design."},
+  {s:"________ refers to emissions tied to materials and construction (not operation).", opts:["Embodied carbon","Daylight factor","Comfort index"], a:0, why:"Embodied carbon is material/fabrication/construction emissions."},
+  {s:"A ________ economy keeps materials/components in use longer through reuse and recovery.", opts:["circular","linear","random"], a:0, why:"Circular economy aims for long-term reuse and reduced waste."},
+  {s:"The bridge ________ includes deck and truss/girders above bearings.", opts:["superstructure","substructure","landscape"], a:0, why:"Superstructure is above bearings; substructure is below."},
+  {s:"A steel ________ uses triangles to transfer loads efficiently through axial forces.", opts:["truss","tile","canopy"], a:0, why:"Trusses rely on triangulated geometry."},
+  {s:"Controlled deconstruction that preserves components is called ________.", opts:["dismantling","painting","polishing"], a:0, why:"Dismantling plans removal safely and preserves reuse potential."},
+  {s:"Collecting real site geometry via scanning/survey is ________ capture.", opts:["reality","fantasy","paper"], a:0, why:"Reality capture produces measured conditions."},
+  {s:"The old-to-new connection zone is an ________.", opts:["interface","ornament","elevation"], a:0, why:"Interfaces are where systems meet and risk concentrates."},
+  {s:"Assessing whether it can be built safely and feasibly is ________.", opts:["constructability","typography","rendering"], a:0, why:"Constructability focuses on real build methods and constraints."},
+  {s:"A ________ beam is a longitudinal deck-support member (often fatigue-sensitive).", opts:["stringer","sky","stone"], a:0, why:"Stringer beams support decks longitudinally."},
+  {s:"Damage from repeated stress cycles over time is called ________.", opts:["fatigue","patina","glare"], a:0, why:"Fatigue is progressive cracking from cyclic loading."},
+  {s:"The process of reusing an existing asset for a new function is ________ reuse.", opts:["adaptive","graphic","acoustic"], a:0, why:"Adaptive reuse = new program with existing structure."},
+];
+let vIndex=0;
+const vocabQuestion=document.getElementById('vocabQuestion');
+const vocabOptions=document.getElementById('vocabOptions');
+const vocabFeedback=document.getElementById('vocabFeedback');
+function renderVocab(){
+  const item=vocabTest[vIndex];
+  vocabQuestion.innerHTML = `<p><strong>Q${vIndex+1}/20.</strong> ${item.s}</p>`;
+  vocabOptions.innerHTML="";
+  vocabFeedback.className="feedback";   // reset classes
+  vocabFeedback.innerHTML="";
+  vocabFeedback.classList.remove("show","good","bad");
+  item.opts.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.textContent=t;
+    d.onclick=()=>selectVocab(i);
+    vocabOptions.appendChild(d);
+  });
+}
+function selectVocab(choice){
+  const item=vocabTest[vIndex];
+  [...vocabOptions.children].forEach(el=>el.classList.remove('selected'));
+  vocabOptions.children[choice].classList.add('selected');
+  const correct = choice===item.a;
+
+  vocabFeedback.classList.add("show");
+  vocabFeedback.classList.add(correct ? "good":"bad");
+  vocabFeedback.innerHTML = (correct ? "Correct. " : "Not quite. ") + item.why;
+}
+function nextVocab(){ vIndex=(vIndex+1)%vocabTest.length; renderVocab(); }
+function prevVocab(){ vIndex=(vIndex-1+vocabTest.length)%vocabTest.length; renderVocab(); }
+function resetVocabTest(){
+  vIndex=0;
+  renderVocab();
+  [...document.querySelectorAll('#pane-vocabtest .opt')].forEach(o=>o.classList.remove('selected'));
+}
+renderVocab();
+
+/* FINAL TEST — 20 MCQ */
+const test=[
+  {q:"Which statement best defines upcycling in bridge projects?", opts:["Scrapping steel for raw material","Reusing components for a higher-value new function","Only repainting an old bridge"], a:1, why:"Upcycling retains structural value and repurposes it."},
+  {q:"Why is an as-is model critical for retrofit decisions?", opts:["It replaces engineering checks","It captures real geometry and deviations","It is only for marketing"], a:1, why:"It reduces uncertainty by reflecting real conditions."},
+  {q:"What is reality capture used for?", opts:["Collect real geometry via scan/survey","Choose façade colors","Write specifications"], a:0, why:"Reality capture produces measured existing conditions."},
+  {q:"A point cloud is…", opts:["Scan-based 3D dataset","A cost table","A daylight map"], a:0, why:"Point clouds store measured 3D points from scanning."},
+  {q:"Residual capacity refers to…", opts:["Remaining safe performance","Aesthetic quality","Noise level"], a:0, why:"It’s the remaining capacity considering deterioration."},
+  {q:"Tolerance management helps when…", opts:["Old and new parts must fit despite deviations","Fonts must be consistent","Scanning is unavailable"], a:0, why:"Existing structure deviation must be accommodated in detailing."},
+  {q:"Defect mapping should primarily…", opts:["Hide issues to speed approvals","Record damage as trackable data","Only happen after construction"], a:1, why:"It supports repair/strengthening decisions and transparency."},
+  {q:"A clearance envelope is…", opts:["Required free space for safe movement","A decorative zone","A steel weld type"], a:0, why:"It defines space that must remain unobstructed."},
+  {q:"Constructability addresses…", opts:["Build feasibility and safety under constraints","Only aesthetics","Only permitting"], a:0, why:"It’s about real site methods: access, staging, lifting, temporary works."},
+  {q:"Clash detection is used to…", opts:["Find conflicts before site work","Replace inspections","Avoid coordination"], a:0, why:"It identifies spatial conflicts early."},
+  {q:"Temporary works are…", opts:["Provisional supports during construction","Permanent architecture","Only landscaping"], a:0, why:"They ensure stability/safety during staging and installation."},
+  {q:"Embodied carbon describes…", opts:["Material and construction emissions","Only operational emissions","Only transport tickets"], a:0, why:"It’s tied to materials + fabrication + construction."},
+  {q:"Circular economy in infrastructure means…", opts:["Keeping components in use longer via reuse/recovery","Throwing old parts away","Only using circular shapes"], a:0, why:"It reduces waste and new extraction through reuse."},
+  {q:"Which is most likely a retrofit uncertainty?", opts:["Perfect dimensions","Hidden damage and deformation","Unlimited site access"], a:1, why:"Existing assets can hide defects and deviate from records."},
+  {q:"An interface is…", opts:["Where old and new systems meet","A logo placement","A render style"], a:0, why:"Interfaces concentrate coordination and fit-up risk."},
+  {q:"A steel truss is characterized by…", opts:["Triangulated members carrying axial forces","Concrete shell action","Glass tension cables"], a:0, why:"Trusses rely on triangles to efficiently transfer forces."},
+  {q:"Superstructure includes…", opts:["Deck and truss/girders above bearings","Foundations only","Soil layers"], a:0, why:"Superstructure is above bearings; substructure is below."},
+  {q:"Why might a lightweight deck be selected for reuse?", opts:["To increase dead load","To keep loads within residual capacity","To reduce span length"], a:1, why:"Lower self-weight reduces demand on reused structure."},
+  {q:"Dismantling is best described as…", opts:["Controlled removal preserving components","Random demolition","Only painting"], a:0, why:"It protects salvage potential and safety."},
+  {q:"Fatigue is…", opts:["Progressive damage from repeated stress cycles","Aesthetic patina","Wind noise"], a:0, why:"Fatigue relates to cyclic loading and crack growth."},
+];
+let tIndex=0;
+const testQuestion=document.getElementById('testQuestion');
+const testOptions=document.getElementById('testOptions');
+const testFeedback=document.getElementById('testFeedback');
+function renderTest(){
+  const item=test[tIndex];
+  testQuestion.innerHTML = `<p><strong>Q${tIndex+1}/20.</strong> ${item.q}</p>`;
+  testOptions.innerHTML="";
+  testFeedback.className="feedback";
+  testFeedback.innerHTML="";
+  testFeedback.classList.remove("show","good","bad");
+  item.opts.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.textContent=t;
+    d.onclick=()=>selectTest(i);
+    testOptions.appendChild(d);
+  });
+}
+function selectTest(choice){
+  const item=test[tIndex];
+  [...testOptions.children].forEach(el=>el.classList.remove('selected'));
+  testOptions.children[choice].classList.add('selected');
+  const correct = choice===item.a;
+
+  testFeedback.classList.add("show");
+  testFeedback.classList.add(correct ? "good":"bad");
+  testFeedback.innerHTML = (correct ? "Correct. " : "Not quite. ") + item.why;
+}
+function nextTest(){ tIndex=(tIndex+1)%test.length; renderTest(); }
+function prevTest(){ tIndex=(tIndex-1+test.length)%test.length; renderTest(); }
+function resetFinalTest(){
+  tIndex=0;
+  renderTest();
+  [...document.querySelectorAll('#pane-test .opt')].forEach(o=>o.classList.remove('selected'));
+}
+renderTest();
+</script>
+
+</body>
+</html>
